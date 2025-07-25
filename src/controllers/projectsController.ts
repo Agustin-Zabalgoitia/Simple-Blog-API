@@ -15,19 +15,6 @@ import {
   handleError,
 } from "../utils";
 
-export const PROJECTS_ORDER_BY_TYPES = [
-  "id",
-  "title",
-  "status_id",
-  "start_date",
-  "end_date",
-  "expected_end_date",
-  "creator_id",
-];
-export const DEFAULT_PROJECTS_ORDER_BY = "title";
-export const DEFAULT_PROJECTS_ORDER = "ASC";
-export const DEFAULT_PROJECTS_OFFSET = "0";
-
 type ProjectCreationBodyRequest = {
   projectName: string;
   description: string;
@@ -42,11 +29,7 @@ export const projectsController = {
       repositoryUrl,
     }: ProjectCreationBodyRequest = req.body;
 
-    let response: ApiResponse<null> = {
-      status_code: STATUS_CODE.BAD_REQUEST,
-      message: RESPONSE_MESSAGES.GENERIC_ERROR_MESSAGE,
-      data: [],
-    };
+    let response: ApiResponse<null> = DEFAULT_RESPONSE;
 
     try {
       const p1 = await Project.create({
@@ -69,11 +52,7 @@ export const projectsController = {
   ) => {
     const { id } = req.params;
 
-    let response: ApiResponse<Project | null> = {
-      status_code: STATUS_CODE.INTERNAL_SERVER_ERROR,
-      message: RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
-      data: [],
-    };
+    let response: ApiResponse<Project | null> = DEFAULT_RESPONSE;
 
     try {
       const idToFind: Array<string> = getArrayFromNumericCSV(id);
@@ -110,6 +89,7 @@ export const projectsController = {
         limit: limit ? parseInt(limit as string) : DEFAULT_QUERY_LIMIT,
         offset: offset ? parseInt(offset as string) : DEFAULT_OFFSET,
       });
+      checkIfNotFound(projectsInTable);
       response.status_code = STATUS_CODE.OK;
       response.message = PROJECT_MESSAGES.GET_OK;
       response.data = projectsInTable;
@@ -159,6 +139,7 @@ export const projectsController = {
           id: idToFind,
         },
       });
+      checkIfNotFound(updatedProjects);
       response.status_code = STATUS_CODE.OK;
       response.message = PROJECT_MESSAGES.UPDATE_OK;
       response.data = [updatedProjects[0]];
