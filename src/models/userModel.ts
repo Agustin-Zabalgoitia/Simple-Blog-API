@@ -1,25 +1,42 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/dbConnection";
+import { UserAttributes } from "../interfaces";
 
-class User extends Model {}
+export interface UserCreationAttributes
+  extends Optional<UserAttributes, "id"> {}
+
+class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
+  public id!: number;
+  public username!: string;
+  public password!: string;
+  public email?: string;
+}
 
 User.init(
   {
-    // Model attributes are defined here
-    firstName: {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: {
+    email: {
       type: DataTypes.STRING,
-      // allowNull defaults to true
+      allowNull: true,
     },
   },
-  {
-    // Other model options go here
-    sequelize, // We need to pass the connection instance
-    modelName: "User", // We need to choose the model name
-  }
+  { sequelize, underscored: true }
 );
 
 export default User;

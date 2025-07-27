@@ -2,6 +2,7 @@ import express from "express";
 import projectsRouter from "./routes/projectsRouter";
 import { TESTING } from "./constants/constants";
 import startServer from "./config/server";
+import userRouter from "./routes/usersRouter";
 
 const app = express();
 const port = process.env.API_PORT;
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api", apiRouter);
 
 apiRouter.use("/project", projectsRouter);
+apiRouter.use("/user", userRouter);
 
 if (process.env.NODE_ENV !== TESTING) {
   startServer();
