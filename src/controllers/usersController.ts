@@ -89,7 +89,7 @@ export const usersController = {
 
     res.status(response.status_code).json(response);
   },
-  deleteProject: async (
+  deleteUser: async (
     req: Request,
     res: Response<ApiResponse<number | null>>
   ) => {
@@ -108,6 +108,33 @@ export const usersController = {
       response.status_code = STATUS_CODE.OK;
       response.message = USER_MESSAGES.DELETE_OK;
       response.data = [numberOfDeletedUsers];
+    } catch (err) {
+      handleError(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
+  updateUser: async (
+    req: Request,
+    res: Response<ApiResponse<number | null>>
+  ) => {
+    let response: ApiResponse<number | null> = DEFAULT_RESPONSE;
+
+    const { id } = req.params;
+    const idToFind: Array<string> = getArrayFromNumericCSV(id);
+
+    try {
+      const updatedUsers = await User.update(req.body, {
+        where: {
+          id: idToFind,
+        },
+      });
+
+      checkIfNotFound(updatedUsers);
+
+      response.status_code = STATUS_CODE.OK;
+      response.message = USER_MESSAGES.UPDATE_OK;
+      response.data = [updatedUsers[0]];
     } catch (err) {
       handleError(err);
     }
