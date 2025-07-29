@@ -121,7 +121,6 @@ export const getOrderByFromString = (
 
     if (str.includes("DESC")) order[1] = "DESC";
   }
-  console.log(order);
   return [order];
 };
 
