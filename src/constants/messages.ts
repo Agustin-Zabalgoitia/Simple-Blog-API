@@ -10,3 +10,10 @@ export const PROJECT_MESSAGES = {
   UPDATE_OK: "The projects has been succesfully updated",
   DELETE_OK: "The projects has been succesfully deleted",
 };
+
+export const USER_MESSAGES = {
+  CREATION_OK: "The user has been successfully created.",
+  GET_OK: "The users has been successfully retrieved.",
+  UPDATE_OK: "The users has been succesfully updated",
+  DELETE_OK: "The users has been succesfully deleted",
+};
