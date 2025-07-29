@@ -89,4 +89,29 @@ export const usersController = {
 
     res.status(response.status_code).json(response);
   },
+  deleteProject: async (
+    req: Request,
+    res: Response<ApiResponse<number | null>>
+  ) => {
+    let response: ApiResponse<number | null> = DEFAULT_RESPONSE;
+
+    const { id } = req.params;
+
+    const idToFind: Array<string> = getArrayFromNumericCSV(id);
+
+    try {
+      const numberOfDeletedUsers: number = await User.destroy({
+        where: {
+          id: idToFind,
+        },
+      });
+      response.status_code = STATUS_CODE.OK;
+      response.message = USER_MESSAGES.DELETE_OK;
+      response.data = [numberOfDeletedUsers];
+    } catch (err) {
+      handleError(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
 };
