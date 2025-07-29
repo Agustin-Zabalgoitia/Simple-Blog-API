@@ -17,3 +17,10 @@ export const USER_MESSAGES = {
   UPDATE_OK: "The users has been succesfully updated",
   DELETE_OK: "The users has been succesfully deleted",
 };
+
+export const BLOG_MESSAGES = {
+  CREATION_OK: "The blog has been successfully created.",
+  GET_OK: "The blogs has been successfully retrieved.",
+  UPDATE_OK: "The blogs has been succesfully updated",
+  DELETE_OK: "The blogs has been succesfully deleted",
+};
