@@ -1,8 +1,18 @@
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import { ApiResponse } from "../interfaces";
 import Blog, { BlogCreationAttributes } from "../models/blogsModel";
-import { DEFAULT_RESPONSE, STATUS_CODE } from "../constants/constants";
-import { checkIfNotFound, getArrayFromNumericCSV, handleError } from "../utils";
+import {
+  DEFAULT_OFFSET,
+  DEFAULT_QUERY_LIMIT,
+  DEFAULT_RESPONSE,
+  STATUS_CODE,
+} from "../constants/constants";
+import {
+  checkIfNotFound,
+  getArrayFromNumericCSV,
+  getOrderByFromString,
+  handleError,
+} from "../utils";
 import { BLOG_MESSAGES } from "../constants/messages";
 
 export const blogsController = {
@@ -49,6 +59,84 @@ export const blogsController = {
       response.data = blogsInTable;
     } catch (err) {
       console.log(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
+  getAllBlogs: async (
+    req: Request,
+    res: Response<ApiResponse<Blog | null>>
+  ) => {
+    let response: ApiResponse<Blog | null> = DEFAULT_RESPONSE;
+
+    const { orderBy } = req.query;
+    const { limit } = req.query;
+    const { offset } = req.query;
+
+    try {
+      const blogsInTable = await Blog.findAll({
+        order: getOrderByFromString("blogName", "createdAt", orderBy as string),
+        limit: limit ? parseInt(limit as string) : DEFAULT_QUERY_LIMIT,
+        offset: offset ? parseInt(offset as string) : DEFAULT_OFFSET,
+      });
+
+      checkIfNotFound(blogsInTable);
+
+      response.status_code = STATUS_CODE.OK;
+      response.message = BLOG_MESSAGES.GET_OK;
+      response.data = blogsInTable;
+    } catch (err) {
+      handleError(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
+  deleteBlog: async (
+    req: Request,
+    res: Response<ApiResponse<number | null>>
+  ) => {
+    let response: ApiResponse<number | null> = DEFAULT_RESPONSE;
+
+    const { id } = req.params;
+
+    const idToFind: Array<string> = getArrayFromNumericCSV(id);
+
+    try {
+      const numberOfDeletedBlogs: number = await Blog.destroy({
+        where: {
+          id: idToFind,
+        },
+      });
+      response.status_code = STATUS_CODE.OK;
+      response.message = BLOG_MESSAGES.DELETE_OK;
+      response.data = [numberOfDeletedBlogs];
+    } catch (err) {
+      handleError(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
+  updateBlog: async (
+    req: Request,
+    res: Response<ApiResponse<number | null>>
+  ) => {
+    let response: ApiResponse<number | null> = DEFAULT_RESPONSE;
+
+    const { id } = req.params;
+    const idToFind: Array<string> = getArrayFromNumericCSV(id);
+
+    try {
+      const updatedBlogs = await Blog.update(req.body, {
+        where: {
+          id: idToFind,
+        },
+      });
+      checkIfNotFound(updatedBlogs);
+      response.status_code = STATUS_CODE.OK;
+      response.message = BLOG_MESSAGES.UPDATE_OK;
+      response.data = [updatedBlogs[0]];
+    } catch (err) {
+      handleError(err);
     }
 
     res.status(response.status_code).json(response);
