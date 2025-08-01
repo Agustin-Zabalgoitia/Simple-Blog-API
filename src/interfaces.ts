@@ -17,3 +17,11 @@ export interface UserAttributes {
   password: string;
   email?: string;
 }
+
+export interface BlogAttributes {
+  id: number;
+  projectId: number;
+  userId: number;
+  title: string;
+  content: string;
+}
