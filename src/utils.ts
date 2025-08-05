@@ -131,8 +131,6 @@ export const getOrderByFromString = (
  * @returns response - A json value that contains 'statusCode' and 'message'
  */
 export const handleError = (error) => {
-  console.log(error);
-
   //500 internal server error
   let response: ApiResponse<null> = {
     status_code: STATUS_CODE.INTERNAL_SERVER_ERROR,
@@ -142,7 +140,7 @@ export const handleError = (error) => {
 
   //409 conflict
   if (error.errors && error.errors[0].type === "unique violation") {
-    response.message = error.errors[0].value + " already exists";
+    response.message = error.errors[0].message;
     response.status_code = STATUS_CODE.CONFLICT;
   }
 
@@ -159,8 +157,8 @@ export const handleError = (error) => {
  * Checks whether the given string is a valid email address.
  * Example of valid email: user@domain.com
  *
- * @param input - The string to validate as an email.
- * @returns true if is a valid email address; otherwise, false.
+ * @param {string} input - The string to validate as an email.
+ * @returns {boolean} true if is a valid email address; otherwise, false.
  *
  * @example
  * isEmail("test@example.ts");

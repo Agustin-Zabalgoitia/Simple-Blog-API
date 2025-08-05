@@ -33,7 +33,7 @@ export const blogsController = {
       response.status_code = STATUS_CODE.CREATED;
       response.message = BLOG_MESSAGES.CREATION_OK;
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     return res.status(response.status_code).json(response);
@@ -52,13 +52,13 @@ export const blogsController = {
         where: { id: idToFind },
       });
 
-      checkIfNotFound(blogsController);
+      checkIfNotFound(blogsInTable);
 
       response.status_code = STATUS_CODE.OK;
       response.message = BLOG_MESSAGES.GET_OK;
       response.data = blogsInTable;
     } catch (err) {
-      console.log(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -86,7 +86,7 @@ export const blogsController = {
       response.message = BLOG_MESSAGES.GET_OK;
       response.data = blogsInTable;
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -111,7 +111,7 @@ export const blogsController = {
       response.message = BLOG_MESSAGES.DELETE_OK;
       response.data = [numberOfDeletedBlogs];
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -136,7 +136,7 @@ export const blogsController = {
       response.message = BLOG_MESSAGES.UPDATE_OK;
       response.data = [updatedBlogs[0]];
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);

@@ -41,7 +41,7 @@ export const projectsController = {
       response.status_code = STATUS_CODE.CREATED;
       response.message = PROJECT_MESSAGES.CREATION_OK;
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     return res.status(response.status_code).json(response);
@@ -64,7 +64,7 @@ export const projectsController = {
       response.message = PROJECT_MESSAGES.GET_OK;
       response.data = projectsInTable;
     } catch (err) {
-      console.log(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -94,7 +94,7 @@ export const projectsController = {
       response.message = PROJECT_MESSAGES.GET_OK;
       response.data = projectsInTable;
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -119,7 +119,7 @@ export const projectsController = {
       response.message = PROJECT_MESSAGES.DELETE_OK;
       response.data = [numberOfDeletedProjects];
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -144,7 +144,7 @@ export const projectsController = {
       response.message = PROJECT_MESSAGES.UPDATE_OK;
       response.data = [updatedProjects[0]];
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);

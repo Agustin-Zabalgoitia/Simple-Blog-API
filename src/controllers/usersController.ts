@@ -84,7 +84,7 @@ export const usersController = {
       response.message = USER_MESSAGES.CREATION_OK;
       response.data = usersInTable;
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -109,7 +109,7 @@ export const usersController = {
       response.message = USER_MESSAGES.DELETE_OK;
       response.data = [numberOfDeletedUsers];
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
@@ -136,7 +136,7 @@ export const usersController = {
       response.message = USER_MESSAGES.UPDATE_OK;
       response.data = [updatedUsers[0]];
     } catch (err) {
-      handleError(err);
+      response = handleError(err);
     }
 
     res.status(response.status_code).json(response);
