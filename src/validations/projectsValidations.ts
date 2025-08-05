@@ -1,6 +1,8 @@
 import { VALIDATIONS } from "../constants/validations";
 import { ORDER_BY } from "../constants/constants";
 import { body, query } from "express-validator";
+import { validateResult } from "../middleware/validationMiddleware";
+import { Request, Response, NextFunction } from "express";
 
 export const createProjectValidation = [
   body("projectName")
@@ -22,6 +24,9 @@ export const createProjectValidation = [
     ),
 
   body("respositoryUrl").optional().isString(),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResult(req, res, next);
+  },
 ];
 
 export const getAllProjectsValidation = [
@@ -31,4 +36,7 @@ export const getAllProjectsValidation = [
     .withMessage(`orderBy can only be ${ORDER_BY}`),
   query("limit").optional().isNumeric().withMessage("limit must be a number"),
   query("offset").optional().isNumeric().withMessage("offset must be a number"),
+  (req: Request, res: Response, next: NextFunction) => {
+    validateResult(req, res, next);
+  },
 ];
