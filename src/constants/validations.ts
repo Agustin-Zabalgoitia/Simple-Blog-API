@@ -1,0 +1,9 @@
+export const VALIDATIONS = {
+  PROJECT: {
+    PROJECTNAME_MIN_LENGHT: 3,
+    DESCRIPTION_MIN_LENGHT: 3,
+  },
+  USER: {
+    USERNAME_MIN_LENGHT: 3,
+  },
+};
