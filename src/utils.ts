@@ -154,3 +154,26 @@ export const handleError = (error) => {
 
   return response;
 };
+
+/**
+ * Checks whether the given string is a valid email address.
+ * Example of valid email: user@domain.com
+ *
+ * @param input - The string to validate as an email.
+ * @returns true if is a valid email address; otherwise, false.
+ *
+ * @example
+ * isEmail("test@example.ts");
+ * // Returns: true
+ *
+ * @example
+ * isEmail("john@doe");
+ * // Returns: false
+ *
+ * @example
+ * isEmail("@testing.org");
+ * // Returns: false
+ */
+export const isEmail = (input: string): Boolean => {
+  return /^[a-zA-Z]+@[a-zA-Z]+(\.[a-zA-Z]+)+$/.test(input);
+};
