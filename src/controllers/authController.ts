@@ -26,10 +26,10 @@ export const authController = {
       const user = await User.findOne({
         where: { username },
       });
-      checkIfNotFound(user);
-
-      if (!comparePassword(password, user.dataValues.password))
-        throw new error("Wrong Password");
+      console.log(user);
+      if (user == null || !(await comparePassword(password, user.password))) {
+        throw new Error("Wrong Password");
+      }
 
       const payload = {
         id: user.id,

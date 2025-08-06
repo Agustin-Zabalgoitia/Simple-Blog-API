@@ -12,7 +12,7 @@ const usersDummyData: Array<UserCreationAttributes> = [
   },
   {
     username: "Gary",
-    password: "L337",
+    password: "$2a$12$9LmYbbbRFfh9rblYYoPp/OYk42g2jJ7b5sNvuoZIF7ZXERNzTDhDe",
     email: "gary@stu.net",
   },
 ];

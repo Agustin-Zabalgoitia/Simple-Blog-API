@@ -81,7 +81,11 @@ export const getArrayFromNumericCSV = (str: string): string[] => {
  * @param value - The return value of the sequelize function
  */
 export const checkIfNotFound = (value) => {
-  if (value == 0 || (Array.isArray(value) && value.length == 0)) {
+  if (
+    value == null ||
+    value == 0 ||
+    (Array.isArray(value) && value.length == 0)
+  ) {
     throw new Error("Not Found");
   }
 };
@@ -154,7 +158,7 @@ export const handleError = (error) => {
   //401 unauthorized
   if (error.message && error.message === "Wrong Password") {
     response.message = RESPONSE_MESSAGES.WRONG_PASSWORD;
-    response.status_code = STATUS_CODE.NOT_FOUND;
+    response.status_code = STATUS_CODE.UNAUTHORIZED;
   }
 
   return response;
