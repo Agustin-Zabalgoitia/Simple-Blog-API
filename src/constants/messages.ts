@@ -29,4 +29,5 @@ export const BLOG_MESSAGES = {
 
 export const AUTH_MESSAGES = {
   SUCCESFUL_LOGIN_MESSAGE: "login succesful",
+  SUCCESFUL_LOGOUT_MESSAGE: "logout succesful",
 };

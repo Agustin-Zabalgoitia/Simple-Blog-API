@@ -136,6 +136,8 @@ export const getOrderByFromString = (
  * @returns response - A json value that contains 'statusCode' and 'message'
  */
 export const handleError = (error) => {
+  console.log(error);
+
   //500 internal server error
   let response: ApiResponse<null> = {
     status_code: STATUS_CODE.INTERNAL_SERVER_ERROR,

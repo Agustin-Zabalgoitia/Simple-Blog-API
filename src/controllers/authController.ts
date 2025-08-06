@@ -26,7 +26,7 @@ export const authController = {
       const user = await User.findOne({
         where: { username },
       });
-      console.log(user);
+
       if (user == null || !(await comparePassword(password, user.password))) {
         throw new Error("Wrong Password");
       }
@@ -51,7 +51,24 @@ export const authController = {
       response.status_code = STATUS_CODE.OK;
       response.data = [payload];
     } catch (err) {
-      console.log(err);
+      response = handleError(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
+  logout: (req: Request, res: Response<ApiResponse<null>>) => {
+    let response = DEFAULT_RESPONSE;
+
+    try {
+      res.clearCookie(TOKEN_NAME, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === PRODUCTION,
+        sameSite: "strict",
+      });
+      response.message = AUTH_MESSAGES.SUCCESFUL_LOGOUT_MESSAGE;
+      response.status_code = STATUS_CODE.OK;
+      response.data = [];
+    } catch (err) {
       response = handleError(err);
     }
 
