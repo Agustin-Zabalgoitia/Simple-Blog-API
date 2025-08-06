@@ -2,6 +2,8 @@ export const RESPONSE_MESSAGES = {
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   GENERIC_ERROR_MESSAGE: "Oop! something went wrong",
+  NOT_FOUND: "Not Found",
+  WRONG_PASSWORD: "Wrong Password",
 };
 
 export const PROJECT_MESSAGES = {
@@ -23,4 +25,8 @@ export const BLOG_MESSAGES = {
   GET_OK: "The blogs has been successfully retrieved.",
   UPDATE_OK: "The blogs has been succesfully updated",
   DELETE_OK: "The blogs has been succesfully deleted",
+};
+
+export const AUTH_MESSAGES = {
+  SUCCESFUL_LOGIN_MESSAGE: "login succesful",
 };

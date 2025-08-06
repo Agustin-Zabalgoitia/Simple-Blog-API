@@ -37,3 +37,6 @@ export const DEFAULT_RESPONSE: ApiResponse<any> = {
   message: RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
   data: [],
 };
+
+export const TOKEN_DURATION = "24h";
+export const TOKEN_NAME = "access_token";

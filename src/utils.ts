@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { Order, OrderItem } from "sequelize";
 import { DEFAULT_ORDER_BY, STATUS_CODE } from "./constants/constants";
 import { ApiResponse } from "./interfaces";
@@ -146,7 +147,13 @@ export const handleError = (error) => {
 
   //404 not found
   if (error.message && error.message === "Not Found") {
-    response.message = "Not Found";
+    response.message = RESPONSE_MESSAGES.NOT_FOUND;
+    response.status_code = STATUS_CODE.NOT_FOUND;
+  }
+
+  //401 unauthorized
+  if (error.message && error.message === "Wrong Password") {
+    response.message = RESPONSE_MESSAGES.WRONG_PASSWORD;
     response.status_code = STATUS_CODE.NOT_FOUND;
   }
 
@@ -174,4 +181,18 @@ export const handleError = (error) => {
  */
 export const isEmail = (input: string): Boolean => {
   return /^[a-zA-Z]+@[a-zA-Z]+(\.[a-zA-Z]+)+$/.test(input);
+};
+
+/**
+ * Checks if password matches with hashedPassword
+ *
+ * @param password - plain text string
+ * @param hashedPassword - hashed string
+ * @returns true if hash matches password, false otherwise
+ */
+export const comparePassword = async (
+  password: string,
+  hashedPassword: string
+): Promise<boolean> => {
+  return await bcrypt.compare(password, hashedPassword);
 };
