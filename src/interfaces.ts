@@ -17,6 +17,7 @@ export interface UserAttributes {
   roleId: number;
   password: string;
   email?: string;
+  deleted: boolean;
 }
 
 export interface BlogAttributes {

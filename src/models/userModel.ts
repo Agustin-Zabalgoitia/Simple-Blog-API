@@ -15,6 +15,7 @@ class User
   public roleId!: number;
   public password!: string;
   public email?: string;
+  public deleted!: boolean;
 }
 
 User.init(
@@ -43,6 +44,11 @@ User.init(
     email: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   { sequelize, underscored: true }

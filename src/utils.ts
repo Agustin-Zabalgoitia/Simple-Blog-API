@@ -3,6 +3,7 @@ import { Order, OrderItem } from "sequelize";
 import { DEFAULT_ORDER_BY, ERRORS, STATUS_CODE } from "./constants/constants";
 import { ApiResponse } from "./interfaces";
 import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "./constants/messages";
+import User from "./models/userModel";
 
 /**
  * Checks if a given string is a comma-separated list of numbers.
@@ -211,4 +212,9 @@ export const comparePassword = async (
   hashedPassword: string
 ): Promise<boolean> => {
   return await bcrypt.compare(password, hashedPassword);
+};
+
+export const isValidUser = async (id: number): Promise<boolean> => {
+  const user = await User.findOne({ where: { id: id } });
+  return user.deleted;
 };

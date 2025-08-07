@@ -106,14 +106,17 @@ export const usersController = {
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
-      const numberOfDeletedUsers: number = await User.destroy({
-        where: {
-          id: idToFind,
-        },
-      });
+      const deletedUsers = await User.update(
+        { deleted: true },
+        {
+          where: {
+            id: idToFind,
+          },
+        }
+      );
       response.status_code = STATUS_CODE.OK;
       response.message = USER_MESSAGES.DELETE_OK;
-      response.data = [numberOfDeletedUsers];
+      response.data = [deletedUsers[0]];
     } catch (err) {
       response = handleError(err);
     }

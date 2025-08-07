@@ -3,10 +3,10 @@ import { ApiResponse } from "../interfaces";
 import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "../constants/messages";
 import { ERRORS, STATUS_CODE, TOKEN_NAME } from "../constants/constants";
 import jwt from "jsonwebtoken";
-import { handleError } from "../utils";
+import { handleError, isValidUser } from "../utils";
 
 export const validateToken = (allowedRolesIds: Array<number>) => {
-  return function validateToken(
+  return async function validateToken(
     req: Request,
     res: Response,
     next: NextFunction
@@ -31,8 +31,10 @@ export const validateToken = (allowedRolesIds: Array<number>) => {
       const decoded = jwt.verify(tokenWithoutPrefix, process.env.SECRET);
 
       if (typeof decoded !== "object") throw new Error(ERRORS.INVALID_TOKEN);
-
-      if (allowedRolesIds.includes(decoded.roleId)) {
+      if (
+        allowedRolesIds.includes(decoded.roleId) &&
+        !(await isValidUser(decoded.id))
+      ) {
         return next();
       } else {
         response.message = AUTH_MESSAGES.FORBIDDEN;
