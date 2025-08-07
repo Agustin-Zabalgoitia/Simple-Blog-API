@@ -27,6 +27,10 @@ export const BLOG_MESSAGES = {
   DELETE_OK: "The blogs has been succesfully deleted",
 };
 
+export const ROLE_MESSAGES = {
+  CREATION_OK: "The roles have been succesfully created",
+};
+
 export const AUTH_MESSAGES = {
   SUCCESFUL_LOGIN_MESSAGE: "Login succesful",
   SUCCESFUL_LOGOUT_MESSAGE: "Logout succesful",

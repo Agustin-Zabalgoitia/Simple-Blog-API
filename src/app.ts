@@ -8,6 +8,7 @@ import { authRouter } from "./routes/authRouter";
 import { validateToken } from "./middleware/auth";
 import projectsUserRouter from "./routes/projectsUserRouter";
 import blogsUserRouter from "./routes/blogsUserRouter";
+import rolesRouter from "./routes/rolesRouter";
 
 const app = express();
 const port = process.env.API_PORT;
@@ -24,6 +25,7 @@ app.use("/api", apiRouter);
 apiRouter.use("/project", projectsRouter);
 apiRouter.use("/user", userRouter);
 apiRouter.use("/blog", blogRouter);
+apiRouter.use("/role", rolesRouter);
 apiRouter.use("/auth", authRouter);
 
 //Routes for users
