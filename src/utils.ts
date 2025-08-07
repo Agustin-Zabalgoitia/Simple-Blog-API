@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { Order, OrderItem } from "sequelize";
 import { DEFAULT_ORDER_BY, STATUS_CODE } from "./constants/constants";
 import { ApiResponse } from "./interfaces";
-import { RESPONSE_MESSAGES } from "./constants/messages";
+import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "./constants/messages";
 
 /**
  * Checks if a given string is a comma-separated list of numbers.
@@ -155,6 +155,12 @@ export const handleError = (error) => {
   if (error.message && error.message === "Not Found") {
     response.message = RESPONSE_MESSAGES.NOT_FOUND;
     response.status_code = STATUS_CODE.NOT_FOUND;
+  }
+
+  //403 forbidden
+  if (error.message && error.message === "Invalid Token") {
+    response.message = AUTH_MESSAGES.INVALID_TOKEN_MESSAGE;
+    response.status_code = STATUS_CODE.FORBIDDEN;
   }
 
   //401 unauthorized

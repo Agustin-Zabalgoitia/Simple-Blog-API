@@ -28,6 +28,8 @@ export const BLOG_MESSAGES = {
 };
 
 export const AUTH_MESSAGES = {
-  SUCCESFUL_LOGIN_MESSAGE: "login succesful",
-  SUCCESFUL_LOGOUT_MESSAGE: "logout succesful",
+  SUCCESFUL_LOGIN_MESSAGE: "Login succesful",
+  SUCCESFUL_LOGOUT_MESSAGE: "Logout succesful",
+  INVALID_TOKEN_MESSAGE: "Invalid token",
+  FORBIDDEN: "Insuficient permissions",
 };

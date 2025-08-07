@@ -40,3 +40,8 @@ export const DEFAULT_RESPONSE: ApiResponse<any> = {
 
 export const TOKEN_DURATION = "24h";
 export const TOKEN_NAME = "access_token";
+
+export const ROLE_NAMES = {
+  ADMIN: "admin",
+  USER: "user",
+};
