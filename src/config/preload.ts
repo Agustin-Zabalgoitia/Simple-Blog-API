@@ -11,9 +11,9 @@ export default async function preloadDummyData() {
   console.log("Preloading dummy data...");
 
   await Project.bulkCreate(projectsDummyData);
+  await Role.bulkCreate(rolesDummyData);
   await User.bulkCreate(usersDummyData);
   await Blog.bulkCreate(blogsDummyData);
-  await Role.bulkCreate(rolesDummyData);
 
   console.log("Dummy data preloaded successfully.");
 }

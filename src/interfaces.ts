@@ -14,6 +14,7 @@ export interface ProjectAttributes {
 export interface UserAttributes {
   id: number;
   username: string;
+  roleId: number;
   password: string;
   email?: string;
 }
