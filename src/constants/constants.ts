@@ -53,3 +53,5 @@ export const ERRORS = {
   NOT_LOGGED_IN: "Not Logged In",
   NOT_FOUND: "Not Found",
 };
+
+export const SALT_ROUNDS = 10;
