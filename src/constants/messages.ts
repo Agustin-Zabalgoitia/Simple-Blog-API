@@ -24,3 +24,7 @@ export const BLOG_MESSAGES = {
   UPDATE_OK: "The blogs has been succesfully updated",
   DELETE_OK: "The blogs has been succesfully deleted",
 };
+
+export const ROLE_MESSAGES = {
+  CREATION_OK: "The roles have been succesfully created",
+};
