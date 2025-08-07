@@ -41,7 +41,15 @@ export const DEFAULT_RESPONSE: ApiResponse<any> = {
 export const TOKEN_DURATION = "24h";
 export const TOKEN_NAME = "access_token";
 
-export const ROLE_NAMES = {
-  ADMIN: "admin",
-  USER: "user",
+export const ROLE_ID = {
+  ADMIN: 1,
+  USER: 2,
+};
+
+export const ERRORS = {
+  CONFLICT: "unique violation",
+  INVALID_CREDENTIALS: "Invalid Credentials",
+  INVALID_TOKEN: "Invalid Token",
+  NOT_LOGGED_IN: "Not Logged In",
+  NOT_FOUND: "Not Found",
 };

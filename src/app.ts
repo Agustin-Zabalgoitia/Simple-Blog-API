@@ -1,6 +1,6 @@
 import express from "express";
 import projectsRouter from "./routes/projectsRouter";
-import { ROLE_NAMES, TESTING } from "./constants/constants";
+import { ROLE_ID, TESTING } from "./constants/constants";
 import startServer from "./config/server";
 import userRouter from "./routes/usersAdminRouter";
 import blogRouter from "./routes/blogsRouter";
@@ -14,10 +14,6 @@ const app = express();
 const port = process.env.API_PORT;
 const apiRouter = express.Router();
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
 app.use(express.json());
 
 app.use("/api", apiRouter);
@@ -28,13 +24,13 @@ apiRouter.use("/role", rolesRouter);
 apiRouter.use("/auth", authRouter);
 
 //Routes for users
-apiRouter.use(validateToken([1, 2]));
+apiRouter.use(validateToken([ROLE_ID.ADMIN, ROLE_ID.USER]));
 
 apiRouter.use("/user/project", projectsUserRouter);
 apiRouter.use("/user/blog", blogsUserRouter);
 
 //Routes for admins
-apiRouter.use(validateToken([1]));
+apiRouter.use(validateToken([ROLE_ID.ADMIN]));
 
 apiRouter.use("/admin/user", userRouter);
 

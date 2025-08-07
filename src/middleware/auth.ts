@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ApiResponse } from "../interfaces";
 import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "../constants/messages";
-import { STATUS_CODE, TOKEN_NAME } from "../constants/constants";
+import { ERRORS, STATUS_CODE, TOKEN_NAME } from "../constants/constants";
 import jwt from "jsonwebtoken";
 import { handleError } from "../utils";
 
@@ -20,17 +20,17 @@ export const validateToken = (allowedRolesIds: Array<number>) => {
     const tokenWithPrefix = req.headers.cookie;
 
     try {
-      if (!tokenWithPrefix) throw new Error("Invalid Token");
+      if (!tokenWithPrefix) throw new Error(ERRORS.NOT_LOGGED_IN);
 
       const tokenAndPrefix = tokenWithPrefix.split("=");
       const prefix = tokenAndPrefix[0];
       const tokenWithoutPrefix = tokenAndPrefix[1];
 
-      if (prefix !== TOKEN_NAME) throw new Error("Invalid Token");
+      if (prefix !== TOKEN_NAME) throw new Error(ERRORS.INVALID_TOKEN);
 
       const decoded = jwt.verify(tokenWithoutPrefix, process.env.SECRET);
 
-      if (typeof decoded !== "object") throw new Error("Invalid Token");
+      if (typeof decoded !== "object") throw new Error(ERRORS.INVALID_TOKEN);
 
       if (allowedRolesIds.includes(decoded.roleId)) {
         return next();

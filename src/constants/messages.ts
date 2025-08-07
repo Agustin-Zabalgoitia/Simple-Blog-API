@@ -3,6 +3,7 @@ export const RESPONSE_MESSAGES = {
     "An unexpected error occurred. Please try again later.",
   GENERIC_ERROR_MESSAGE: "Oop! something went wrong",
   NOT_FOUND: "Not Found",
+  NOT_LOGGED_IN: "You are not logged in",
   WRONG_PASSWORD: "Wrong Password",
 };
 

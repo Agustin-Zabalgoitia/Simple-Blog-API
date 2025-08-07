@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { Order, OrderItem } from "sequelize";
-import { DEFAULT_ORDER_BY, STATUS_CODE } from "./constants/constants";
+import { DEFAULT_ORDER_BY, ERRORS, STATUS_CODE } from "./constants/constants";
 import { ApiResponse } from "./interfaces";
 import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "./constants/messages";
 
@@ -86,7 +86,7 @@ export const checkIfNotFound = (value) => {
     value == 0 ||
     (Array.isArray(value) && value.length == 0)
   ) {
-    throw new Error("Not Found");
+    throw new Error(ERRORS.NOT_FOUND);
   }
 };
 
@@ -146,26 +146,30 @@ export const handleError = (error) => {
   };
 
   //409 conflict
-  if (error.errors && error.errors[0].type === "unique violation") {
+  if (error.errors && error.errors[0].type === ERRORS.CONFLICT) {
     response.message = error.errors[0].message;
     response.status_code = STATUS_CODE.CONFLICT;
   }
 
   //404 not found
-  if (error.message && error.message === "Not Found") {
+  if (error.message && error.message === ERRORS.NOT_FOUND) {
     response.message = RESPONSE_MESSAGES.NOT_FOUND;
     response.status_code = STATUS_CODE.NOT_FOUND;
   }
 
   //403 forbidden
-  if (error.message && error.message === "Invalid Token") {
+  if (error.message && error.message === ERRORS.INVALID_TOKEN) {
     response.message = AUTH_MESSAGES.INVALID_TOKEN_MESSAGE;
     response.status_code = STATUS_CODE.FORBIDDEN;
   }
 
   //401 unauthorized
-  if (error.message && error.message === "Wrong Password") {
+  if (error.message && error.message === ERRORS.INVALID_CREDENTIALS) {
     response.message = RESPONSE_MESSAGES.WRONG_PASSWORD;
+    response.status_code = STATUS_CODE.UNAUTHORIZED;
+  }
+  if (error.message && error.message === ERRORS.NOT_LOGGED_IN) {
+    response.message = RESPONSE_MESSAGES.NOT_LOGGED_IN;
     response.status_code = STATUS_CODE.UNAUTHORIZED;
   }
 

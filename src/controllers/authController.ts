@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import {
   DEFAULT_RESPONSE,
+  ERRORS,
   PRODUCTION,
   STATUS_CODE,
   TOKEN_DURATION,
@@ -29,7 +30,7 @@ export const authController = {
       });
 
       if (user == null || !(await comparePassword(password, user.password))) {
-        throw new Error("Wrong Password");
+        throw new Error(ERRORS.INVALID_CREDENTIALS);
       }
 
       const payload = {
