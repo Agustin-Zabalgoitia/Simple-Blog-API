@@ -23,16 +23,20 @@ app.use(express.json());
 app.use("/api", apiRouter);
 
 apiRouter.use("/project", projectsRouter);
-apiRouter.use("/user", userRouter);
 apiRouter.use("/blog", blogRouter);
 apiRouter.use("/role", rolesRouter);
 apiRouter.use("/auth", authRouter);
 
 //Routes for users
-apiRouter.use(validateToken([ROLE_NAMES.USER]));
+apiRouter.use(validateToken([1, 2]));
 
-apiRouter.use("/user/projects", projectsUserRouter);
-apiRouter.use("/user/blogs", blogsUserRouter);
+apiRouter.use("/user/project", projectsUserRouter);
+apiRouter.use("/user/blog", blogsUserRouter);
+
+//Routes for admins
+apiRouter.use(validateToken([1]));
+
+apiRouter.use("/admin/user", userRouter);
 
 if (process.env.NODE_ENV !== TESTING) {
   startServer();

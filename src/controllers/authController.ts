@@ -12,6 +12,7 @@ import { checkIfNotFound, comparePassword, handleError } from "../utils";
 import { error } from "console";
 import jwt from "jsonwebtoken";
 import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "../constants/messages";
+import Role from "../models/rolesModel";
 
 export const authController = {
   login: async (
@@ -33,6 +34,7 @@ export const authController = {
 
       const payload = {
         id: user.id,
+        roleId: user.roleId,
         username: user.username,
         email: user.email,
       };

@@ -5,7 +5,7 @@ import { STATUS_CODE, TOKEN_NAME } from "../constants/constants";
 import jwt from "jsonwebtoken";
 import { handleError } from "../utils";
 
-export const validateToken = (allowedRoles: Array<string>) => {
+export const validateToken = (allowedRolesIds: Array<number>) => {
   return function validateToken(
     req: Request,
     res: Response,
@@ -32,9 +32,8 @@ export const validateToken = (allowedRoles: Array<string>) => {
 
       if (typeof decoded !== "object") throw new Error("Invalid Token");
 
-      console.log(decoded);
-      if (allowedRoles.includes(decoded.role.name)) {
-        next();
+      if (allowedRolesIds.includes(decoded.roleId)) {
+        return next();
       } else {
         response.message = AUTH_MESSAGES.FORBIDDEN;
         response.status_code = STATUS_CODE.FORBIDDEN;
