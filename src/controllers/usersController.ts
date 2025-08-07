@@ -19,17 +19,20 @@ export const usersController = {
   createUser: async (req: Request, res: Response<ApiResponse<null>>) => {
     let response: ApiResponse<null> = DEFAULT_RESPONSE;
 
-    const { username, password, email }: UserCreationAttributes = req.body;
+    const { username, roleId, password, email }: UserCreationAttributes =
+      req.body;
 
     try {
       await User.create({
         username: username,
+        roleId: roleId,
         password: password,
         email: email,
       });
 
       response.message = USER_MESSAGES.CREATION_OK;
       response.status_code = STATUS_CODE.CREATED;
+      response.data = [];
     } catch (err) {
       response = handleError(err);
     }

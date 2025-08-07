@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/dbConnection";
 import { UserAttributes } from "../interfaces";
+import Role from "./rolesModel";
 
 export interface UserCreationAttributes
   extends Optional<UserAttributes, "id"> {}
@@ -11,6 +12,7 @@ class User
 {
   public id!: number;
   public username!: string;
+  public roleId!: number;
   public password!: string;
   public email?: string;
 }
@@ -26,6 +28,13 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    roleId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: Role,
+        key: "id",
+      },
     },
     password: {
       type: DataTypes.STRING,

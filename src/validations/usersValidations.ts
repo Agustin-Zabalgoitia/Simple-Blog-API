@@ -12,7 +12,11 @@ export const createUserValidation = [
     .withMessage(
       `username must be at least ${VALIDATIONS.USER.USERNAME_MIN_LENGHT} characters long`
     ),
-
+  body("roleId")
+    .exists()
+    .withMessage("roleId must be provided")
+    .isNumeric()
+    .withMessage("roleId must be a valid number"),
   body("password").exists().withMessage("password must be provided"),
   body("email")
     .optional()
