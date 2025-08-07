@@ -10,7 +10,7 @@ export const STATUS_CODE = {
   OK: 200,
   CREATED: 201,
   BAD_REQUEST: 400,
-  STATUS_CODE_UNAUTHORIZED: 401,
+  UNAUTHORIZED: 401,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
@@ -36,4 +36,20 @@ export const DEFAULT_RESPONSE: ApiResponse<any> = {
   status_code: STATUS_CODE.INTERNAL_SERVER_ERROR,
   message: RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
   data: [],
+};
+
+export const TOKEN_DURATION = "24h";
+export const TOKEN_NAME = "access_token";
+
+export const ROLE_ID = {
+  ADMIN: 1,
+  USER: 2,
+};
+
+export const ERRORS = {
+  CONFLICT: "unique violation",
+  INVALID_CREDENTIALS: "Invalid Credentials",
+  INVALID_TOKEN: "Invalid Token",
+  NOT_LOGGED_IN: "Not Logged In",
+  NOT_FOUND: "Not Found",
 };

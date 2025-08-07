@@ -1,7 +1,8 @@
+import bcrypt from "bcrypt";
 import { Order, OrderItem } from "sequelize";
-import { DEFAULT_ORDER_BY, STATUS_CODE } from "./constants/constants";
+import { DEFAULT_ORDER_BY, ERRORS, STATUS_CODE } from "./constants/constants";
 import { ApiResponse } from "./interfaces";
-import { RESPONSE_MESSAGES } from "./constants/messages";
+import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "./constants/messages";
 
 /**
  * Checks if a given string is a comma-separated list of numbers.
@@ -80,8 +81,12 @@ export const getArrayFromNumericCSV = (str: string): string[] => {
  * @param value - The return value of the sequelize function
  */
 export const checkIfNotFound = (value) => {
-  if (value == 0 || (Array.isArray(value) && value.length == 0)) {
-    throw new Error("Not Found");
+  if (
+    value == null ||
+    value == 0 ||
+    (Array.isArray(value) && value.length == 0)
+  ) {
+    throw new Error(ERRORS.NOT_FOUND);
   }
 };
 
@@ -131,6 +136,8 @@ export const getOrderByFromString = (
  * @returns response - A json value that contains 'statusCode' and 'message'
  */
 export const handleError = (error) => {
+  console.log(error);
+
   //500 internal server error
   let response: ApiResponse<null> = {
     status_code: STATUS_CODE.INTERNAL_SERVER_ERROR,
@@ -139,15 +146,31 @@ export const handleError = (error) => {
   };
 
   //409 conflict
-  if (error.errors && error.errors[0].type === "unique violation") {
+  if (error.errors && error.errors[0].type === ERRORS.CONFLICT) {
     response.message = error.errors[0].message;
     response.status_code = STATUS_CODE.CONFLICT;
   }
 
   //404 not found
-  if (error.message && error.message === "Not Found") {
-    response.message = "Not Found";
+  if (error.message && error.message === ERRORS.NOT_FOUND) {
+    response.message = RESPONSE_MESSAGES.NOT_FOUND;
     response.status_code = STATUS_CODE.NOT_FOUND;
+  }
+
+  //403 forbidden
+  if (error.message && error.message === ERRORS.INVALID_TOKEN) {
+    response.message = AUTH_MESSAGES.INVALID_TOKEN_MESSAGE;
+    response.status_code = STATUS_CODE.FORBIDDEN;
+  }
+
+  //401 unauthorized
+  if (error.message && error.message === ERRORS.INVALID_CREDENTIALS) {
+    response.message = RESPONSE_MESSAGES.WRONG_PASSWORD;
+    response.status_code = STATUS_CODE.UNAUTHORIZED;
+  }
+  if (error.message && error.message === ERRORS.NOT_LOGGED_IN) {
+    response.message = RESPONSE_MESSAGES.NOT_LOGGED_IN;
+    response.status_code = STATUS_CODE.UNAUTHORIZED;
   }
 
   return response;
@@ -174,4 +197,18 @@ export const handleError = (error) => {
  */
 export const isEmail = (input: string): Boolean => {
   return /^[a-zA-Z]+@[a-zA-Z]+(\.[a-zA-Z]+)+$/.test(input);
+};
+
+/**
+ * Checks if password matches with hashedPassword
+ *
+ * @param password - plain text string
+ * @param hashedPassword - hashed string
+ * @returns true if hash matches password, false otherwise
+ */
+export const comparePassword = async (
+  password: string,
+  hashedPassword: string
+): Promise<boolean> => {
+  return await bcrypt.compare(password, hashedPassword);
 };

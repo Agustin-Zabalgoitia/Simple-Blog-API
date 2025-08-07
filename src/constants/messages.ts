@@ -2,6 +2,9 @@ export const RESPONSE_MESSAGES = {
   INTERNAL_SERVER_ERROR:
     "An unexpected error occurred. Please try again later.",
   GENERIC_ERROR_MESSAGE: "Oop! something went wrong",
+  NOT_FOUND: "Not Found",
+  NOT_LOGGED_IN: "You are not logged in",
+  WRONG_PASSWORD: "Wrong Password",
 };
 
 export const PROJECT_MESSAGES = {
@@ -27,4 +30,11 @@ export const BLOG_MESSAGES = {
 
 export const ROLE_MESSAGES = {
   CREATION_OK: "The roles have been succesfully created",
+};
+
+export const AUTH_MESSAGES = {
+  SUCCESFUL_LOGIN_MESSAGE: "Login succesful",
+  SUCCESFUL_LOGOUT_MESSAGE: "Logout succesful",
+  INVALID_TOKEN_MESSAGE: "Invalid token",
+  FORBIDDEN: "Insuficient permissions",
 };
