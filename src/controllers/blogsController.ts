@@ -5,11 +5,14 @@ import {
   DEFAULT_OFFSET,
   DEFAULT_QUERY_LIMIT,
   DEFAULT_RESPONSE,
+  ERRORS,
   STATUS_CODE,
 } from "../constants/constants";
 import {
   checkIfNotFound,
+  checkIfUserCanModifyBlog,
   getArrayFromNumericCSV,
+  getDecodedToken,
   getOrderByFromString,
   handleError,
 } from "../utils";
@@ -98,10 +101,15 @@ export const blogsController = {
     let response: ApiResponse<number | null> = DEFAULT_RESPONSE;
 
     const { id } = req.params;
-
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
+      const token = getDecodedToken(req.headers.cookie);
+      idToFind.forEach((blogId) => {
+        if (!checkIfUserCanModifyBlog(token, Number(blogId)))
+          throw new Error(ERRORS.NOT_OWNER_OR_ADMIN);
+      });
+
       const numberOfDeletedBlogs: number = await Blog.destroy({
         where: {
           id: idToFind,

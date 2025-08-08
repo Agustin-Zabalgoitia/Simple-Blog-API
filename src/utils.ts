@@ -1,9 +1,17 @@
 import bcrypt from "bcrypt";
 import { Order, OrderItem } from "sequelize";
-import { DEFAULT_ORDER_BY, ERRORS, STATUS_CODE } from "./constants/constants";
-import { ApiResponse } from "./interfaces";
+import {
+  DEFAULT_ORDER_BY,
+  ERRORS,
+  ROLE_ID,
+  STATUS_CODE,
+} from "./constants/constants";
+import { ApiResponse, TokenData } from "./interfaces";
 import { AUTH_MESSAGES, RESPONSE_MESSAGES } from "./constants/messages";
 import User from "./models/userModel";
+import jwt from "jsonwebtoken";
+import Blog from "./models/blogsModel";
+import { Json } from "sequelize/types/utils";
 
 /**
  * Checks if a given string is a comma-separated list of numbers.
@@ -163,6 +171,10 @@ export const handleError = (error) => {
     response.message = AUTH_MESSAGES.INVALID_TOKEN_MESSAGE;
     response.status_code = STATUS_CODE.FORBIDDEN;
   }
+  if (error.message && error.message === ERRORS.NOT_OWNER_OR_ADMIN) {
+    response.message = RESPONSE_MESSAGES.NOT_OWNER_OR_ADMIN;
+    response.status_code = STATUS_CODE.FORBIDDEN;
+  }
 
   //401 unauthorized
   if (error.message && error.message === ERRORS.INVALID_CREDENTIALS) {
@@ -214,7 +226,42 @@ export const comparePassword = async (
   return await bcrypt.compare(password, hashedPassword);
 };
 
+/**
+ * Check if the provided id corresponds with a non-deleted user in the database
+ * @param id the user id
+ * @returns true if the user with the provided id exists in the database, false otherwise
+ */
 export const isValidUser = async (id: number): Promise<boolean> => {
   const user = await User.findOne({ where: { id: id } });
   return user.deleted;
+};
+
+export const getDecodedToken = (token: string): TokenData => {
+  const tokenAndPrefix = token.split("=");
+  const tokenWithoutPrefix = tokenAndPrefix[1];
+
+  return jwt.verify(tokenWithoutPrefix, process.env.SECRET) as TokenData;
+};
+
+export const userIsAdmin = async (userId: number): Promise<boolean> => {
+  const user = await User.findOne({ where: { id: userId } });
+  return user.roleId == ROLE_ID.ADMIN;
+};
+
+export const userOwnsBlog = async (
+  userId: number,
+  blogId: number
+): Promise<boolean> => {
+  const blog = await Blog.findOne({ where: { id: blogId, userId: userId } });
+  return blog !== null;
+};
+
+export const checkIfUserCanModifyBlog = async (
+  tokenData: TokenData,
+  blogId: number
+) => {
+  return (
+    tokenData.roleId == ROLE_ID.ADMIN ||
+    (await userOwnsBlog(tokenData.id, blogId))
+  );
 };

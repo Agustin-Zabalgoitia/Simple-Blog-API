@@ -32,3 +32,12 @@ export interface RoleAttributes {
   id: number;
   name: string;
 }
+
+export interface TokenData {
+  id: number;
+  roleId: number;
+  username: string;
+  email?: string;
+  iat: number;
+  exp: number;
+}

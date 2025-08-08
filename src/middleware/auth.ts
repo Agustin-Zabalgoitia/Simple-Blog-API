@@ -29,7 +29,6 @@ export const validateToken = (allowedRolesIds: Array<number>) => {
       if (prefix !== TOKEN_NAME) throw new Error(ERRORS.INVALID_TOKEN);
 
       const decoded = jwt.verify(tokenWithoutPrefix, process.env.SECRET);
-
       if (typeof decoded !== "object") throw new Error(ERRORS.INVALID_TOKEN);
       if (
         allowedRolesIds.includes(decoded.roleId) &&
