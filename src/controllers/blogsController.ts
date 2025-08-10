@@ -105,10 +105,9 @@ export const blogsController = {
 
     try {
       const token = getDecodedToken(req.headers.cookie);
-      idToFind.forEach((blogId) => {
-        if (!checkIfUserCanModifyBlog(token, Number(blogId)))
+      for (const id of idToFind)
+        if (!(await checkIfUserCanModifyBlog(token, Number(id))))
           throw new Error(ERRORS.NOT_OWNER_OR_ADMIN);
-      });
 
       const numberOfDeletedBlogs: number = await Blog.destroy({
         where: {
@@ -134,6 +133,11 @@ export const blogsController = {
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
+      const token = getDecodedToken(req.headers.cookie);
+      for (const id of idToFind)
+        if (!(await checkIfUserCanModifyBlog(token, Number(id))))
+          throw new Error(ERRORS.NOT_OWNER_OR_ADMIN);
+
       const updatedBlogs = await Blog.update(req.body, {
         where: {
           id: idToFind,
