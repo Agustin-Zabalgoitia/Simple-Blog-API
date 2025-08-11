@@ -17,6 +17,7 @@ import {
   handleError,
 } from "../utils";
 import { BLOG_MESSAGES } from "../constants/messages";
+import Project from "../models/projectsModel";
 
 export const blogsController = {
   createBlog: async (req: Request, res: Response<ApiResponse<null>>) => {
@@ -78,6 +79,14 @@ export const blogsController = {
 
     try {
       const blogsInTable = await Blog.findAll({
+        include: {
+          model: Project,
+          where: {
+            deleted: false,
+          },
+          required: true,
+          attributes: [],
+        },
         order: getOrderByFromString("blogName", "createdAt", orderBy as string),
         limit: limit ? parseInt(limit as string) : DEFAULT_QUERY_LIMIT,
         offset: offset ? parseInt(offset as string) : DEFAULT_OFFSET,

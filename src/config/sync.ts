@@ -1,4 +1,5 @@
 import { PRODUCTION } from "../constants/constants";
+import defineAssociations from "../models/associations";
 import Project from "../models/projectsModel";
 import sequelize from "./dbConnection";
 
@@ -12,6 +13,7 @@ const syncDatabase = async () => {
     models.forEach((model) => {
       console.log(`${model.name} has been registered.`);
     });
+    defineAssociations();
 
     // If this parameter is TRUE all tables will be destroyed and recreated during initialization.
     // This parameter is TRUE if you are not in production

@@ -12,6 +12,7 @@ import User from "./models/userModel";
 import jwt from "jsonwebtoken";
 import Blog from "./models/blogsModel";
 import { Json } from "sequelize/types/utils";
+import Project from "./models/projectsModel";
 
 /**
  * Checks if a given string is a comma-separated list of numbers.

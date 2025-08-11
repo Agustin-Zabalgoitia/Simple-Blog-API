@@ -9,6 +9,7 @@ export interface ProjectAttributes {
   projectName: string;
   description?: string;
   repositoryUrl?: string;
+  deleted: boolean;
 }
 
 export interface UserAttributes {

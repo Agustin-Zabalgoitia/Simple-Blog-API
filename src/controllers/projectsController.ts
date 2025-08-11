@@ -32,7 +32,7 @@ export const projectsController = {
     let response: ApiResponse<null> = DEFAULT_RESPONSE;
 
     try {
-      const p1 = await Project.create({
+      await Project.create({
         projectName: projectName,
         description: description,
         repositoryUrl: repositoryUrl,
@@ -57,7 +57,10 @@ export const projectsController = {
     try {
       const idToFind: Array<string> = getArrayFromNumericCSV(id);
       const projectsInTable = await Project.findAll({
-        where: { id: idToFind },
+        where: { id: idToFind, deleted: false },
+        attributes: {
+          exclude: ["deleted"],
+        },
       });
       checkIfNotFound(projectsInTable);
       response.status_code = STATUS_CODE.OK;
@@ -70,6 +73,42 @@ export const projectsController = {
     res.status(response.status_code).json(response);
   },
   getAllProjects: async (
+    req: Request,
+    res: Response<ApiResponse<Project | null>>
+  ) => {
+    let response: ApiResponse<Project | null> = DEFAULT_RESPONSE;
+
+    const { orderBy } = req.query;
+    const { limit } = req.query;
+    const { offset } = req.query;
+
+    try {
+      const projectsInTable = await Project.findAll({
+        order: getOrderByFromString(
+          "projectName",
+          "createdAt",
+          orderBy as string
+        ),
+        limit: limit ? parseInt(limit as string) : DEFAULT_QUERY_LIMIT,
+        offset: offset ? parseInt(offset as string) : DEFAULT_OFFSET,
+        attributes: {
+          exclude: ["deleted"],
+        },
+        where: {
+          deleted: false,
+        },
+      });
+      checkIfNotFound(projectsInTable);
+      response.status_code = STATUS_CODE.OK;
+      response.message = PROJECT_MESSAGES.GET_OK;
+      response.data = projectsInTable;
+    } catch (err) {
+      response = handleError(err);
+    }
+
+    res.status(response.status_code).json(response);
+  },
+  getAllProjectsAdmin: async (
     req: Request,
     res: Response<ApiResponse<Project | null>>
   ) => {
@@ -110,14 +149,19 @@ export const projectsController = {
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
-      const numberOfDeletedProjects: number = await Project.destroy({
-        where: {
-          id: idToFind,
+      const deletedProjects = await Project.update(
+        {
+          deleted: true,
         },
-      });
+        {
+          where: {
+            id: idToFind,
+          },
+        }
+      );
       response.status_code = STATUS_CODE.OK;
       response.message = PROJECT_MESSAGES.DELETE_OK;
-      response.data = [numberOfDeletedProjects];
+      response.data = [deletedProjects[0]];
     } catch (err) {
       response = handleError(err);
     }
@@ -137,6 +181,7 @@ export const projectsController = {
       const updatedProjects = await Project.update(req.body, {
         where: {
           id: idToFind,
+          deleted: false,
         },
       });
       checkIfNotFound(updatedProjects);

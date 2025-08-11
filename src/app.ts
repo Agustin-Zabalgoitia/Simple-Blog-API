@@ -9,6 +9,7 @@ import { validateToken } from "./middleware/auth";
 import projectsUserRouter from "./routes/projectsUserRouter";
 import blogsUserRouter from "./routes/blogsUserRouter";
 import rolesRouter from "./routes/rolesRouter";
+import projectsAdminRouter from "./routes/projectsAdminRouter";
 
 const app = express();
 const port = process.env.API_PORT;
@@ -33,6 +34,7 @@ apiRouter.use("/user/blog", blogsUserRouter);
 apiRouter.use(validateToken([ROLE_ID.ADMIN]));
 
 apiRouter.use("/admin/user", userRouter);
+apiRouter.use("/admin/project", projectsAdminRouter);
 
 if (process.env.NODE_ENV !== TESTING) {
   startServer();
