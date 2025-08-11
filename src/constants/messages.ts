@@ -5,6 +5,7 @@ export const RESPONSE_MESSAGES = {
   NOT_FOUND: "Not Found",
   NOT_LOGGED_IN: "You are not logged in",
   WRONG_PASSWORD: "Wrong Password",
+  NOT_OWNER_OR_ADMIN: "You are not the owner of the resource or an admin",
 };
 
 export const PROJECT_MESSAGES = {

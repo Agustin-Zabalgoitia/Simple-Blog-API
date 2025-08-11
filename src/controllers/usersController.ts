@@ -2,6 +2,7 @@ import {
   DEFAULT_OFFSET,
   DEFAULT_QUERY_LIMIT,
   DEFAULT_RESPONSE,
+  SALT_ROUNDS,
   STATUS_CODE,
 } from "../constants/constants";
 import { ApiResponse } from "../interfaces";
@@ -14,6 +15,7 @@ import {
   handleError,
 } from "../utils";
 import { USER_MESSAGES } from "../constants/messages";
+import bcrypt from "bcrypt";
 
 export const usersController = {
   createUser: async (req: Request, res: Response<ApiResponse<null>>) => {
@@ -23,10 +25,11 @@ export const usersController = {
       req.body;
 
     try {
+      const hash = await bcrypt.hash(password, SALT_ROUNDS);
       await User.create({
         username: username,
         roleId: roleId,
-        password: password,
+        password: hash,
         email: email,
       });
 
@@ -103,14 +106,17 @@ export const usersController = {
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
-      const numberOfDeletedUsers: number = await User.destroy({
-        where: {
-          id: idToFind,
-        },
-      });
+      const deletedUsers = await User.update(
+        { deleted: true },
+        {
+          where: {
+            id: idToFind,
+          },
+        }
+      );
       response.status_code = STATUS_CODE.OK;
       response.message = USER_MESSAGES.DELETE_OK;
-      response.data = [numberOfDeletedUsers];
+      response.data = [deletedUsers[0]];
     } catch (err) {
       response = handleError(err);
     }
@@ -125,6 +131,9 @@ export const usersController = {
 
     const { id } = req.params;
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
+
+    if (req.body.password)
+      req.body.password = await bcrypt.hash(req.body.password, SALT_ROUNDS);
 
     try {
       const updatedUsers = await User.update(req.body, {

@@ -13,6 +13,7 @@ class Project
   public projectName!: string;
   public description?: string;
   public repositoryUrl?: string;
+  public deleted!: boolean;
 }
 
 Project.init(
@@ -33,6 +34,10 @@ Project.init(
     },
     repositoryUrl: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    deleted: {
+      type: DataTypes.BOOLEAN,
       allowNull: true,
     },
   },

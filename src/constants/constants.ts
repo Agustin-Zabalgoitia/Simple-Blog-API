@@ -52,4 +52,7 @@ export const ERRORS = {
   INVALID_TOKEN: "Invalid Token",
   NOT_LOGGED_IN: "Not Logged In",
   NOT_FOUND: "Not Found",
+  NOT_OWNER_OR_ADMIN: "Not Owner or Admin",
 };
+
+export const SALT_ROUNDS = 10;

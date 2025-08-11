@@ -5,15 +5,19 @@ import {
   DEFAULT_OFFSET,
   DEFAULT_QUERY_LIMIT,
   DEFAULT_RESPONSE,
+  ERRORS,
   STATUS_CODE,
 } from "../constants/constants";
 import {
   checkIfNotFound,
+  checkIfUserCanModifyBlog,
   getArrayFromNumericCSV,
+  getDecodedToken,
   getOrderByFromString,
   handleError,
 } from "../utils";
 import { BLOG_MESSAGES } from "../constants/messages";
+import Project from "../models/projectsModel";
 
 export const blogsController = {
   createBlog: async (req: Request, res: Response<ApiResponse<null>>) => {
@@ -75,6 +79,14 @@ export const blogsController = {
 
     try {
       const blogsInTable = await Blog.findAll({
+        include: {
+          model: Project,
+          where: {
+            deleted: false,
+          },
+          required: true,
+          attributes: [],
+        },
         order: getOrderByFromString("blogName", "createdAt", orderBy as string),
         limit: limit ? parseInt(limit as string) : DEFAULT_QUERY_LIMIT,
         offset: offset ? parseInt(offset as string) : DEFAULT_OFFSET,
@@ -98,10 +110,14 @@ export const blogsController = {
     let response: ApiResponse<number | null> = DEFAULT_RESPONSE;
 
     const { id } = req.params;
-
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
+      const token = getDecodedToken(req.headers.cookie);
+      for (const id of idToFind)
+        if (!(await checkIfUserCanModifyBlog(token, Number(id))))
+          throw new Error(ERRORS.NOT_OWNER_OR_ADMIN);
+
       const numberOfDeletedBlogs: number = await Blog.destroy({
         where: {
           id: idToFind,
@@ -126,6 +142,11 @@ export const blogsController = {
     const idToFind: Array<string> = getArrayFromNumericCSV(id);
 
     try {
+      const token = getDecodedToken(req.headers.cookie);
+      for (const id of idToFind)
+        if (!(await checkIfUserCanModifyBlog(token, Number(id))))
+          throw new Error(ERRORS.NOT_OWNER_OR_ADMIN);
+
       const updatedBlogs = await Blog.update(req.body, {
         where: {
           id: idToFind,

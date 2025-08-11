@@ -29,7 +29,11 @@ export const authController = {
         where: { username },
       });
 
-      if (user == null || !(await comparePassword(password, user.password))) {
+      if (
+        user == null ||
+        user.deleted ||
+        !(await comparePassword(password, user.password))
+      ) {
         throw new Error(ERRORS.INVALID_CREDENTIALS);
       }
 

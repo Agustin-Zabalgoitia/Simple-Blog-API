@@ -9,6 +9,7 @@ export interface ProjectAttributes {
   projectName: string;
   description?: string;
   repositoryUrl?: string;
+  deleted: boolean;
 }
 
 export interface UserAttributes {
@@ -17,6 +18,7 @@ export interface UserAttributes {
   roleId: number;
   password: string;
   email?: string;
+  deleted: boolean;
 }
 
 export interface BlogAttributes {
@@ -30,4 +32,13 @@ export interface BlogAttributes {
 export interface RoleAttributes {
   id: number;
   name: string;
+}
+
+export interface TokenData {
+  id: number;
+  roleId: number;
+  username: string;
+  email?: string;
+  iat: number;
+  exp: number;
 }
